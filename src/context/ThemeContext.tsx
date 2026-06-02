@@ -1,21 +1,12 @@
 /* eslint-disable react-refresh/only-export-components */
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
-
 type Theme = "light" | "dark";
-
-type ThemeContextType = {
-  theme: Theme;
-  toggle: () => void;
-  setTheme: (t: Theme) => void;
+type ThemeContextType = { theme: Theme; toggle: () => void; setTheme: (t: Theme) => void;
 };
-
 const Ctx = createContext<ThemeContextType | null>(null);
-
 const KEY = "ahms_theme";
-
 export function ThemeProvider({ children }: { children: ReactNode }) {
   const [theme, setThemeState] = useState<Theme>("light");
-
   useEffect(() => {
     const saved =
       typeof window !== "undefined" ? (localStorage.getItem(KEY) as Theme | null) : null;

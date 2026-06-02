@@ -1,11 +1,16 @@
-import { forwardRef, useId } from "react";
-import Select from "react-select";
+import React, { forwardRef, useId, useMemo } from "react";
+import Select, { SingleValue } from "react-select";
 import { cn } from "@/lib/utils";
+
+export interface SelectOption {
+  label: string;
+  value: string;
+}
 
 export interface FieldSelectProps {
   label?: string;
   error?: string;
-  options: { label: string; value: string }[];
+  options: SelectOption[];
   placeholder?: string;
   value?: string;
   onValueChange?: (value: string) => void;
@@ -32,8 +37,13 @@ export const FieldSelect = forwardRef<any, FieldSelectProps>(
     const autoId = useId();
     const selectId = id || autoId;
 
-    const selectedOption =
-      options.find((option) => option.value === value) || null;
+    const selectedOption = useMemo(() => {
+      return (
+        options.find(
+          (option) => String(option.value) === String(value)
+        ) || null
+      );
+    }, [options, value]);
 
     return (
       <div className="w-full">
@@ -46,7 +56,7 @@ export const FieldSelect = forwardRef<any, FieldSelectProps>(
           </label>
         )}
 
-        <Select
+        <Select<SelectOption, false>
           inputId={selectId}
           ref={ref}
           options={options}
@@ -55,11 +65,9 @@ export const FieldSelect = forwardRef<any, FieldSelectProps>(
           isDisabled={disabled}
           className={cn("react-select-container", className)}
           classNamePrefix="react-select"
-          onChange={(option) =>
-            onValueChange?.(
-              (option as { value: string } | null)?.value ?? ""
-            )
-          }
+          onChange={(option: SingleValue<SelectOption>) => {
+            onValueChange?.(option?.value ?? "");
+          }}
           styles={{
             control: (base, state) => ({
               ...base,
@@ -75,7 +83,7 @@ export const FieldSelect = forwardRef<any, FieldSelectProps>(
               color: "var(--foreground)",
               boxShadow: state.isFocused
                 ? "0 0 0 4px color-mix(in oklab, var(--primary) 15%, transparent)"
-                : "var(--shadow-card)",
+                : "none",
               transition: "all 0.2s ease",
               "&:hover": {
                 borderColor: "var(--primary)",
@@ -108,7 +116,7 @@ export const FieldSelect = forwardRef<any, FieldSelectProps>(
               border: "1px solid var(--border)",
               borderRadius: 16,
               overflow: "hidden",
-              boxShadow: "var(--shadow-elevated)",
+              boxShadow: "0 10px 30px rgba(0,0,0,0.12)",
               zIndex: 9999,
             }),
 

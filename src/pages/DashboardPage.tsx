@@ -55,10 +55,16 @@ export function DashboardPage() {
 
   const [search, setSearch] = useState("");
 
-  const { data, isLoading, isError, error, refetch } = useQuery({
-    queryKey: ["dashboard"],
-    queryFn: dashboardService.get,
-  });
+ const { data, isLoading, isError, error, refetch } = useQuery({
+  queryKey: ["dashboard"],
+  queryFn: dashboardService.get,
+});
+
+console.log("Dashboard Response:", data);
+console.log("Total Patients:", (data as any)?.total_patients);
+console.log("Today's Appointments:", (data as any)?.today_appointments);
+console.log("Active Prescriptions:", (data as any)?.active_prescriptions);
+console.log("Pending Reminders:", (data as any)?.pending_reminders);
 
   const filteredPatients = useMemo(() => {
     if (!data?.recentPatients) return [];
@@ -113,8 +119,14 @@ export function DashboardPage() {
         {statMeta.map((m, i) => {
           const Icon = m.icon;
 
-          const stat = data?.stats?.[m.key] ?? 0;
+          const statMap = {
+  totalPatients: (data as any)?.total_patients ?? 0,
+  todaysAppointments: (data as any)?.today_appointments ?? 0,
+  activePrescriptions: (data as any)?.active_prescriptions ?? 0,
+  pendingReminders: (data as any)?.pending_reminders ?? 0,
+};
 
+const stat = statMap[m.key];
           return (
             <GlassCard key={m.key} delay={i * 0.05} className="relative overflow-hidden">
               <div

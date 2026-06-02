@@ -16,7 +16,7 @@ import { useAuth } from "@/context/AuthContext";
 
 const nav = [
   { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
-  { to: "/patients/new", label: "Add Patient", icon: UserPlus },
+  { to: "/add-patient", label: "Add Patient", icon: UserPlus },
   { to: "/patients/search", label: "Patient Search", icon: Search },
   { to: "/notifications", label: "Notifications", icon: Bell },
   { to: "/profile", label: "Profile", icon: UserIcon },

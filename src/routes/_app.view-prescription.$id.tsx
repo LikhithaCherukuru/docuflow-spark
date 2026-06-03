@@ -1,13 +1,13 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { ProtectedRoute } from "./-guards";
 import { AppLayout } from "@/layouts/AppLayout";
-import { AddPatientPage } from "@/pages/AddPatientPage";
+import ViewPrescriptionPage from "@/pages/ViewPrescriptionPage";
 
-export const Route = createFileRoute("/src/routes/_app/add-patient")({
+export const Route = createFileRoute("/_app/view-prescription/$id")({
   component: () => (
     <ProtectedRoute>
       <AppLayout>
-        <AddPatientPage />
+        <ViewPrescriptionPage />
       </AppLayout>
     </ProtectedRoute>
   ),

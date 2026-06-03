@@ -20,38 +20,18 @@ export interface FieldSelectProps {
 }
 
 export const FieldSelect = forwardRef<any, FieldSelectProps>(
-  (
-    {
-      label,
-      error,
-      options,
-      placeholder,
-      value,
-      onValueChange,
-      className,
-      id,
-      disabled,
-    },
-    ref,
-  ) => {
+  ({ label, error, options, placeholder, value, onValueChange, className, id, disabled }, ref) => {
     const autoId = useId();
     const selectId = id || autoId;
 
     const selectedOption = useMemo(() => {
-      return (
-        options.find(
-          (option) => String(option.value) === String(value)
-        ) || null
-      );
+      return options.find((option) => String(option.value) === String(value)) || null;
     }, [options, value]);
 
     return (
       <div className="w-full">
         {label && (
-          <label
-            htmlFor={selectId}
-            className="mb-2 block text-sm font-medium text-foreground"
-          >
+          <label htmlFor={selectId} className="mb-2 block text-sm font-medium text-foreground">
             {label}
           </label>
         )}
@@ -78,8 +58,8 @@ export const FieldSelect = forwardRef<any, FieldSelectProps>(
               borderColor: error
                 ? "var(--destructive)"
                 : state.isFocused
-                ? "var(--primary)"
-                : "var(--border)",
+                  ? "var(--primary)"
+                  : "var(--border)",
               color: "var(--foreground)",
               boxShadow: state.isFocused
                 ? "0 0 0 4px color-mix(in oklab, var(--primary) 15%, transparent)"
@@ -135,8 +115,8 @@ export const FieldSelect = forwardRef<any, FieldSelectProps>(
               backgroundColor: state.isSelected
                 ? "var(--accent)"
                 : state.isFocused
-                ? "color-mix(in oklab, var(--accent) 60%, transparent)"
-                : "transparent",
+                  ? "color-mix(in oklab, var(--accent) 60%, transparent)"
+                  : "transparent",
               color: "var(--foreground)",
             }),
 
@@ -151,11 +131,7 @@ export const FieldSelect = forwardRef<any, FieldSelectProps>(
           }}
         />
 
-        {error && (
-          <p className="mt-1 text-xs text-destructive">
-            {error}
-          </p>
-        )}
+        {error && <p className="mt-1 text-xs text-destructive">{error}</p>}
       </div>
     );
   },

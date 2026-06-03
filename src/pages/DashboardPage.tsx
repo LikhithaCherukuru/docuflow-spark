@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { dashboardService, type DashboardAppointment } from "@/services/dashboard.service";
 import type { Patient } from "@/services/patients.service";
@@ -36,45 +36,18 @@ const statMeta = [
     icon: CalendarDays,
     accent: "from-chart-2 to-success",
   },
-  {
-    key: "activePrescriptions",
-    label: "Active Prescriptions",
-    icon: FileText,
-    accent: "from-chart-3 to-warning",
-  },
-  {
-    key: "pendingReminders",
-    label: "Pending Reminders",
-    icon: BellRing,
-    accent: "from-chart-4 to-chart-5",
-  },
 ] as const;
 
 export function DashboardPage() {
   const { user } = useAuth();
 
-  const [search, setSearch] = useState("");
-
- const { data, isLoading, isError, error, refetch } = useQuery({
-  queryKey: ["dashboard"],
-  queryFn: dashboardService.get,
-});
-
-console.log("Dashboard Response:", data);
-console.log("Total Patients:", (data as any)?.total_patients);
-console.log("Today's Appointments:", (data as any)?.today_appointments);
-console.log("Active Prescriptions:", (data as any)?.active_prescriptions);
-console.log("Pending Reminders:", (data as any)?.pending_reminders);
-
-  const filteredPatients = useMemo(() => {
-    if (!data?.recentPatients) return [];
-
-    if (!search.trim()) {
-      return data.recentPatients;
-    }
-
-    return data.recentPatients.filter((p: Patient) => p.mobile?.includes(search.trim()));
-  }, [data?.recentPatients, search]);
+  const { data, isLoading, isError, error, refetch } = useQuery({
+    queryKey: ["dashboard"],
+    queryFn: dashboardService.get,
+  });
+  console.log("Dashboard Response:", data);
+  console.log("Total Patients:", (data as any)?.total_patients);
+  console.log("Today's Appointments:", (data as any)?.today_appointments);
 
   if (isError) {
     return (
@@ -115,18 +88,17 @@ console.log("Pending Reminders:", (data as any)?.pending_reminders);
       </div>
 
       {/* STATS */}
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      {/* STATS */}
+      <div className="grid gap-4 sm:grid-cols-2">
         {statMeta.map((m, i) => {
           const Icon = m.icon;
 
-          const statMap = {
-  totalPatients: (data as any)?.total_patients ?? 0,
-  todaysAppointments: (data as any)?.today_appointments ?? 0,
-  activePrescriptions: (data as any)?.active_prescriptions ?? 0,
-  pendingReminders: (data as any)?.pending_reminders ?? 0,
-};
+          const statMap: Record<string, number> = {
+            totalPatients: (data as any)?.total_patients ?? 0,
+            todaysAppointments: (data as any)?.today_appointments ?? 0,
+          };
 
-const stat = statMap[m.key];
+          const stat = statMap[m.key] ?? 0;
           return (
             <GlassCard key={m.key} delay={i * 0.05} className="relative overflow-hidden">
               <div
@@ -156,100 +128,6 @@ const stat = statMap[m.key];
           );
         })}
       </div>
-
-      {/* RECENT PATIENTS */}
-      <GlassCard>
-        <div className="mb-4 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            <h3 className="font-semibold">Recent patients</h3>
-
-            <p className="text-xs text-muted-foreground">Search patients using mobile number</p>
-          </div>
-
-          <div className="flex w-full max-w-sm items-center gap-2 rounded-xl border border-border bg-card/60 px-3">
-            <Search className="size-4 text-muted-foreground" />
-
-            <input
-              type="text"
-              placeholder="Search by mobile number..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="h-11 w-full bg-transparent text-sm outline-none placeholder:text-muted-foreground"
-            />
-          </div>
-        </div>
-
-        <div className="overflow-x-auto">
-          <table className="w-full text-left text-sm">
-            <thead>
-              <tr className="border-b border-border text-xs uppercase tracking-wider text-muted-foreground">
-                <th className="py-2 pr-3 font-medium">Patient</th>
-
-                <th className="py-2 pr-3 font-medium">Age</th>
-
-                <th className="py-2 pr-3 font-medium">Diagnosis</th>
-
-                <th className="py-2 pr-3 font-medium">BP</th>
-
-                <th className="py-2 pr-3 font-medium">Sugar</th>
-              </tr>
-            </thead>
-
-            <tbody>
-              {isLoading ? (
-                Array.from({ length: 5 }).map((_, i) => (
-                  <tr key={i} className="border-b border-border/60">
-                    <td colSpan={5} className="py-3">
-                      <Skeleton className="h-6 w-full" />
-                    </td>
-                  </tr>
-                ))
-              ) : filteredPatients.length > 0 ? (
-                filteredPatients.map((p: Patient) => (
-                  <motion.tr
-                    key={p.id}
-                    initial={{ opacity: 0, y: 6 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="border-b border-border/60 last:border-0 hover:bg-muted/40"
-                  >
-                    <td className="py-3 pr-3">
-                      <div className="flex items-center gap-3">
-                        <div className="grid size-9 place-items-center rounded-full bg-gradient-primary text-xs font-semibold text-primary-foreground">
-                          {p.name
-                            ?.split(" ")
-                            ?.map((s) => s[0])
-                            ?.slice(0, 2)
-                            ?.join("")}
-                        </div>
-
-                        <div>
-                          <p className="font-medium">{p.name}</p>
-
-                          <p className="text-xs text-muted-foreground">{p.mobile}</p>
-                        </div>
-                      </div>
-                    </td>
-
-                    <td className="py-3 pr-3">{p.age}</td>
-
-                    <td className="py-3 pr-3">{p.diagnosis}</td>
-
-                    <td className="py-3 pr-3">{p.bp}</td>
-
-                    <td className="py-3 pr-3">{p.sugar}</td>
-                  </motion.tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan={5} className="py-10 text-center text-muted-foreground">
-                    No patients found
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
-      </GlassCard>
 
       {/* APPOINTMENTS */}
       <GlassCard>

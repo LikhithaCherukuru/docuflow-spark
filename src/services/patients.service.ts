@@ -55,10 +55,7 @@ export const patientsService = {
     console.log("POST:", "/patients/");
     console.log("PAYLOAD:", payload);
 
-    const { data } = await api.post<Patient>(
-      "/patients/",
-      payload
-    );
+    const { data } = await api.post<Patient>("/patients/", payload);
 
     return data;
   },
@@ -74,16 +71,14 @@ export const patientsService = {
         patient.mobile_number.includes(q) ||
         patient.diagnosis.toLowerCase().includes(q) ||
         patient.symptoms.toLowerCase().includes(q) ||
-        patient.blood_group.toLowerCase().includes(q)
+        patient.blood_group.toLowerCase().includes(q),
     );
   },
 
   async findByMobile(mobile: string): Promise<Patient> {
     const patients = await this.list();
 
-    const patient = patients.find(
-      (p) => p.mobile_number === mobile
-    );
+    const patient = patients.find((p) => p.mobile_number === mobile);
 
     if (!patient) {
       throw new Error("Patient not found");
@@ -95,9 +90,7 @@ export const patientsService = {
   async findById(id: string): Promise<Patient> {
     const patients = await this.list();
 
-    const patient = patients.find(
-      (p) => p.id === id
-    );
+    const patient = patients.find((p) => p.id === id);
 
     if (!patient) {
       throw new Error("Patient not found");
@@ -110,30 +103,20 @@ export const patientsService = {
     console.log("BASE URL:", api.defaults.baseURL);
     console.log("GET:", `/patients/${mobile}`);
 
-    const { data } = await api.get<Patient>(
-      `/patients/${mobile}`
-    );
+    const { data } = await api.get<Patient>(`/patients/${mobile}`);
 
     return data;
   },
 
-
   async delete(mobileNumber: string) {
-  const { data } = await api.delete(
-    `/patients/${mobileNumber}`
-  );
+    const { data } = await api.delete(`/patients/${mobileNumber}`);
 
-  return data;
-},
+    return data;
+  },
 
-async update(payload: any) {
-  const { data } = await api.put(
-    `/patients/${payload.mobile_number}`,
-    payload
-  );
+  async update(payload: any) {
+    const { data } = await api.put(`/patients/${payload.mobile_number}`, payload);
 
-  return data;
-},
-
-
+    return data;
+  },
 };

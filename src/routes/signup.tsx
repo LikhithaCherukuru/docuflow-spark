@@ -40,22 +40,22 @@ function SignupPage() {
   });
 
   const onSubmit = async (v: SignupValues) => {
-  try {
-    await signup({
-      fullName: v.fullName,
-      hospital: v.hospital,
-      email: v.email,
-      phone: v.phone,
-      password: v.password,
-      confirmPassword: v.confirmPassword,
-    });
+    try {
+      await signup({
+        fullName: v.fullName,
+        hospital: v.hospital,
+        email: v.email,
+        phone: v.phone,
+        password: v.password,
+        confirmPassword: v.confirmPassword,
+      });
 
-    toast.success("Account created — welcome to AuraMed!");
-    navigate({ to: "/dashboard" });
-  } catch (err: any) {
-    toast.error(err?.message || "Could not create account");
-  }
-};
+      toast.success("Account created — welcome to AuraMed!");
+      navigate({ to: "/dashboard" });
+    } catch (err: any) {
+      toast.error(err?.message || "Could not create account");
+    }
+  };
 
   return (
     <div className="grid min-h-screen lg:grid-cols-2">

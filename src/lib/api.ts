@@ -2,9 +2,7 @@ import axios, { AxiosError, type InternalAxiosRequestConfig } from "axios";
 import { toast } from "sonner";
 import { mockAdapter } from "@/services/mockAdapter";
 
-const BASE_URL =
-  (import.meta as any).env?.VITE_API_BASE_URL ||
-  "http://192.168.1.57:8000/api/v1";
+const BASE_URL = (import.meta as any).env?.VITE_API_BASE_URL || "http://192.168.1.57:8000/api/v1";
 
 console.log("API BASE URL =", BASE_URL);
 
@@ -26,11 +24,7 @@ if (USE_MOCK) {
 }
 
 api.interceptors.request.use((config: InternalAxiosRequestConfig) => {
-  console.log(
-    "REQUEST:",
-    config.method?.toUpperCase(),
-    `${config.baseURL}${config.url}`
-  );
+  console.log("REQUEST:", config.method?.toUpperCase(), `${config.baseURL}${config.url}`);
 
   if (typeof window !== "undefined") {
     const token = localStorage.getItem(TOKEN_KEY);
@@ -69,11 +63,7 @@ api.interceptors.response.use(
     } else if (status === 404) {
       toast.error("API endpoint not found.");
     } else if (status === 422) {
-      toast.error(
-        typeof message === "string"
-          ? message
-          : JSON.stringify(message)
-      );
+      toast.error(typeof message === "string" ? message : JSON.stringify(message));
     } else if (status && status >= 500) {
       toast.error("Server error. Please try again later.");
     }
@@ -82,7 +72,7 @@ api.interceptors.response.use(
       ...error,
       message,
     });
-  }
+  },
 );
 
 export type ApiError = {

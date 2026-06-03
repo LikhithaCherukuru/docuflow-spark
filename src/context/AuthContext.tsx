@@ -14,11 +14,7 @@ type AuthCtx = {
   loading: boolean;
   isAuthenticated: boolean;
 
-  login: (
-    email: string,
-    password: string,
-    remember?: boolean,
-  ) => Promise<void>;
+  login: (email: string, password: string, remember?: boolean) => Promise<void>;
 
   signup: (p: {
     fullName: string;
@@ -35,11 +31,7 @@ type AuthCtx = {
 
 const Ctx = createContext<AuthCtx | null>(null);
 
-export function AuthProvider({
-  children,
-}: {
-  children: ReactNode;
-}) {
+export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<DoctorUser | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -64,40 +56,30 @@ export function AuthProvider({
     }
   }, []);
 
-  const login = useCallback(
-    async (
-      email: string,
-      password: string,
-      remember?: boolean,
-    ) => {
-      await authService.login({
-        email,
-        password,
-        remember,
-      });
+  const login = useCallback(async (email: string, password: string, remember?: boolean) => {
+    await authService.login({
+      email,
+      password,
+      remember,
+    });
 
-      const user = await authService.me();
+    const user = await authService.me();
 
-      setUser(user);
-    },
-    [],
-  );
+    setUser(user);
+  }, []);
 
-  const signup = useCallback(
-    async (p: Parameters<AuthCtx["signup"]>[0]) => {
-      await authService.signup(p);
+  const signup = useCallback(async (p: Parameters<AuthCtx["signup"]>[0]) => {
+    await authService.signup(p);
 
-      await authService.login({
-        email: p.email,
-        password: p.password,
-      });
+    await authService.login({
+      email: p.email,
+      password: p.password,
+    });
 
-      const user = await authService.me();
+    const user = await authService.me();
 
-      setUser(user);
-    },
-    [],
-  );
+    setUser(user);
+  }, []);
 
   const logout = useCallback(() => {
     authService.logout();
@@ -122,20 +104,14 @@ export function AuthProvider({
     [user, loading, login, signup, logout, refresh],
   );
 
-  return (
-    <Ctx.Provider value={value}>
-      {children}
-    </Ctx.Provider>
-  );
+  return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
 }
 
 export function useAuth() {
   const ctx = useContext(Ctx);
 
   if (!ctx) {
-    throw new Error(
-      "useAuth must be used within AuthProvider",
-    );
+    throw new Error("useAuth must be used within AuthProvider");
   }
 
   return ctx;

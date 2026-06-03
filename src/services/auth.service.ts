@@ -10,11 +10,7 @@ export type DoctorUser = {
 };
 
 export const authService = {
-  async login(payload: {
-    email: string;
-    password: string;
-    remember?: boolean;
-  }) {
+  async login(payload: { email: string; password: string; remember?: boolean }) {
     const { data } = await api.post<{
       success: boolean;
       message: string;
@@ -26,25 +22,25 @@ export const authService = {
     return data;
   },
 
-async signup(payload: {
-  fullName: string;
-  hospital: string;
-  email: string;
-  phone: string;
-  password: string;
-  confirmPassword: string;
-}) {
-  const { data } = await api.post("/auth/signup", {
-    full_name: payload.fullName,
-    hospital_name: payload.hospital,
-    email: payload.email,
-    phone_number: payload.phone,
-    password: payload.password,
-    confirm_password: payload.confirmPassword,
-  });
+  async signup(payload: {
+    fullName: string;
+    hospital: string;
+    email: string;
+    phone: string;
+    password: string;
+    confirmPassword: string;
+  }) {
+    const { data } = await api.post("/auth/signup", {
+      full_name: payload.fullName,
+      hospital_name: payload.hospital,
+      email: payload.email,
+      phone_number: payload.phone,
+      password: payload.password,
+      confirm_password: payload.confirmPassword,
+    });
 
-  return data;
-},
+    return data;
+  },
 
   async me() {
     const { data } = await api.get<{ user: DoctorUser }>("/auth/me");

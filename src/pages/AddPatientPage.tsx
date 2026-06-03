@@ -20,16 +20,7 @@ const genderOptions = [
   { label: "Other", value: "Other" },
 ];
 
-const bloodGroups = [
-  "A+",
-  "A-",
-  "B+",
-  "B-",
-  "AB+",
-  "AB-",
-  "O+",
-  "O-",
-].map((b) => ({
+const bloodGroups = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"].map((b) => ({
   label: b,
   value: b,
 }));
@@ -40,7 +31,7 @@ export function AddPatientPage() {
 
   const search = Route.useSearch();
 
-const isEdit = search.edit === "true";
+  const isEdit = search.edit === "true";
 
   const {
     register,
@@ -58,97 +49,85 @@ const isEdit = search.edit === "true";
   });
 
   const loadPatient = async () => {
-  try {
-    const patient = await patientsService.getByMobile(
-      search.mobile
-    );
+    try {
+      const patient = await patientsService.getByMobile(search.mobile);
 
-    const p = Array.isArray(patient)
-      ? patient[0]
-      : patient;
+      const p = Array.isArray(patient) ? patient[0] : patient;
 
-    reset({
-      name: p.patient_name,
-      mobile: p.mobile_number,
-      age: String(p.age),
-      gender: p.gender,
-      bp: p.blood_pressure,
-      sugar: p.sugar_level,
-      weight: p.weight,
-      height: p.height,
-      bloodGroup: p.blood_group,
-      symptoms: p.symptoms,
-      diagnosis: p.diagnosis,
-      allergies: p.allergies,
-      address: p.address,
-    });
-  } catch (error) {
-    console.error(error);
-  }
-};
-
-useEffect(() => {
-  if (!isEdit || !search.mobile) return;
-
-  loadPatient();
-}, [isEdit, search.mobile]);
-
-
-
-
- const onSubmit = async (v: PatientValues) => {
-  console.log("FORM DATA:", v);
-
-  const payload = {
-    patient_name: v.name,
-    mobile_number: v.mobile,
-    age: Number(v.age),
-    gender: v.gender,
-    blood_pressure: v.bp,
-    sugar_level: v.sugar,
-    weight: v.weight,
-    height: v.height,
-    blood_group: v.bloodGroup,
-    symptoms: v.symptoms,
-    diagnosis: v.diagnosis,
-    allergies: v.allergies,
-    address: v.address,
+      reset({
+        name: p.patient_name,
+        mobile: p.mobile_number,
+        age: String(p.age),
+        gender: p.gender,
+        bp: p.blood_pressure,
+        sugar: p.sugar_level,
+        weight: p.weight,
+        height: p.height,
+        bloodGroup: p.blood_group,
+        symptoms: p.symptoms,
+        diagnosis: p.diagnosis,
+        allergies: p.allergies,
+        address: p.address,
+      });
+    } catch (error) {
+      console.error(error);
+    }
   };
 
-  console.log("BACKEND PAYLOAD:", payload);
+  useEffect(() => {
+    if (!isEdit || !search.mobile) return;
 
-  try {
-   const p = isEdit
-  ? await patientsService.update(payload)
-  : await patientsService.create(payload);
+    loadPatient();
+  }, [isEdit, search.mobile]);
 
-    toast.success(
-      `Patient ${p.patient_name ?? payload.patient_name} registered`
-    );
+  const onSubmit = async (v: PatientValues) => {
+    console.log("FORM DATA:", v);
 
-    await qc.invalidateQueries({
-      queryKey: ["dashboard"],
-    });
+    const payload = {
+      patient_name: v.name,
+      mobile_number: v.mobile,
+      age: Number(v.age),
+      gender: v.gender,
+      blood_pressure: v.bp,
+      sugar_level: v.sugar,
+      weight: v.weight,
+      height: v.height,
+      blood_group: v.bloodGroup,
+      symptoms: v.symptoms,
+      diagnosis: v.diagnosis,
+      allergies: v.allergies,
+      address: v.address,
+    };
 
-    reset();
+    console.log("BACKEND PAYLOAD:", payload);
 
-    navigate({
-      to: "/patients/search",
-      search: {
-        q: payload.mobile_number,
-      },
-    });
-  } catch (err: unknown) {
-    console.error("API ERROR:", err);
+    try {
+      const p = isEdit
+        ? await patientsService.update(payload)
+        : await patientsService.create(payload);
 
-    const message =
-      err instanceof Error
-        ? err.message
-        : "Could not register patient";
+      toast.success(`Patient ${p.patient_name ?? payload.patient_name} registered`);
 
-    toast.error(message);
-  } 
-};
+      await qc.invalidateQueries({
+        queryKey: ["dashboard"],
+      });
+
+      reset();
+
+      navigate({
+        to: "/patients/search",
+        search: {
+          q: payload.mobile_number,
+        },
+      });
+    } catch (err: unknown) {
+      console.error("API ERROR:", err);
+
+      const message = err instanceof Error ? err.message : "Could not register patient";
+
+      toast.error(message);
+    }
+  };
 
   return (
     <div className="mx-auto max-w-4xl space-y-6">
@@ -159,9 +138,7 @@ useEffect(() => {
 
         <div>
           <h1 className="font-display text-2xl font-bold sm:text-3xl">
-           {isEdit
-  ? "Update Patient"
-  : "Register a patient"} 
+            {isEdit ? "Update Patient" : "Register a patient"}
           </h1>
 
           <p className="text-sm text-muted-foreground">
@@ -171,11 +148,7 @@ useEffect(() => {
       </div>
 
       <GlassCard>
-        <form
-          noValidate
-          onSubmit={handleSubmit(onSubmit)}
-          className="space-y-6"
-        >
+        <form noValidate onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           <Section title="Personal information">
             <FieldInput
               label="Patient name"
@@ -190,8 +163,7 @@ useEffect(() => {
               placeholder="+1 555 0100"
               error={errors.mobile?.message}
               {...register("mobile")}
-                disabled={isEdit}
-
+              disabled={isEdit}
             />
 
             <FieldInput
@@ -299,12 +271,23 @@ useEffect(() => {
           </Section>
 
           <div className="flex flex-wrap justify-end gap-3 border-t border-border/60 pt-5">
+            <Button type="button" variant="outline" onClick={() => reset()}>
+              Reset
+            </Button>
+
             <Button
               type="button"
               variant="outline"
-              onClick={() => reset()}
+              onClick={() =>
+                navigate({
+                  to: "/create-prescription",
+                  search: {
+                    mobile: search.mobile ?? "",
+                  },
+                })
+              }
             >
-              Reset
+              Add Prescription
             </Button>
 
             <Button
@@ -312,47 +295,22 @@ useEffect(() => {
               disabled={isSubmitting}
               className="bg-gradient-primary text-primary-foreground shadow-glow"
             >
-              {isSubmitting ? <Spinner /> : "Save patient"}{isSubmitting ? (
-  <Spinner />
-) : isEdit ? (
-  "Update Patient"
-) : (
-  "Save Patient"
-)}
+              {isSubmitting ? <Spinner /> : isEdit ? "Update Patient" : "Save Patient"}
             </Button>
           </div>
         </form>
       </GlassCard>
     </div>
   );
-
- 
-
-
-
-
 }
-
-
-
-
- 
-function Section({
-  title,
-  children,
-}: {
-  title: string;
-  children: React.ReactNode;
-}) {
+function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <div>
       <h3 className="mb-3 text-sm font-semibold uppercase tracking-wider text-muted-foreground">
         {title}
       </h3>
 
-      <div className="grid gap-4 sm:grid-cols-2">
-        {children}
-      </div>
+      <div className="grid gap-4 sm:grid-cols-2">{children}</div>
     </div>
   );
 }

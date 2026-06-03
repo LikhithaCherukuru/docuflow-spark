@@ -18,7 +18,7 @@ export function SettingsPage() {
       <GlassCard>
         <h3 className="font-semibold">Appearance</h3>
 
-        <p className="text-sm text-muted-foreground">Choose how AuraMed looks on your device.</p>
+        <p className="text-sm text-muted-foreground">Choose how SmartCure looks on your device.</p>
 
         <div className="mt-4 grid gap-3 sm:grid-cols-2">
           <ThemeOption

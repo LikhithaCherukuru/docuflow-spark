@@ -79,7 +79,7 @@ export function DashboardPage() {
           </Button>
 
           <Button asChild className="bg-gradient-primary text-primary-foreground shadow-glow">
-            <Link to="/patients/new">
+            <Link to="/add-patient">
               <UserPlus className="mr-2 size-4" />
               Add patient
             </Link>

@@ -24,6 +24,7 @@ export default function PrescriptionListPage() {
       setLoading(true);
 
       const data = await prescriptionService.getAllPrescriptions();
+      console.log(data);
 
       setPrescriptions(data);
       setMessage("");

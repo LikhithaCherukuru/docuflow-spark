@@ -4,6 +4,7 @@ import { Activity, ArrowRight, Brain, Shield, Stethoscope, Sparkles } from "luci
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/context/AuthContext";
 import { useEffect } from "react";
+import logo from "@/assets/logo.png";
 
 export const Route = createFileRoute("/")({
   component: Landing,
@@ -20,17 +21,23 @@ function Landing() {
   return (
     <div className="relative min-h-screen overflow-hidden bg-aurora">
       <header className="relative z-10 mx-auto flex max-w-7xl items-center justify-between px-6 py-6">
-        <Link to="/" className="flex items-center gap-2">
-          <span className="grid size-10 place-items-center rounded-xl bg-gradient-primary text-primary-foreground shadow-glow">
-            <Activity className="size-5" />
-          </span>
-          <div>
-            <p className="font-display text-lg font-semibold leading-none">AuraMed</p>
-            <p className="text-[10px] uppercase tracking-widest text-muted-foreground">
-              Smart Hospital AI
-            </p>
-          </div>
-        </Link>
+        <Link to="/" className="flex items-center gap-4">
+  <img
+    src={logo}
+    alt="SmartCure"
+    className="h-20 w-20 object-contain shrink-0"
+  />
+
+  <div>
+    <h1 className="font-display text-2xl font-bold text-foreground">
+      SmartCure
+    </h1>
+
+    <p className="text-sm font-medium text-muted-foreground">
+      Smart Reminders, Healthier Lives
+    </p>
+  </div>
+</Link>
         <div className="flex items-center gap-2">
           <Button asChild variant="ghost">
             <Link to="/login" search={{ redirect: "/dashboard" }}>

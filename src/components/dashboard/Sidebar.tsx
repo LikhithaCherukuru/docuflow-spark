@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/context/AuthContext";
+import logo from "@/assets/logo.png";
 
 const nav = [
   { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
@@ -49,17 +50,23 @@ export function Sidebar({ open, onClose }: { open: boolean; onClose: () => void 
         )}
       >
         <div className="mb-6 flex items-center justify-between">
-          <Link to="/dashboard" className="flex items-center gap-2">
-            <span className="grid size-9 place-items-center rounded-xl bg-gradient-primary text-primary-foreground shadow-glow">
-              <Activity className="size-5" />
-            </span>
-            <div>
-              <p className="font-display text-base font-semibold leading-none">AuraMed</p>
-              <p className="text-[10px] uppercase tracking-widest text-muted-foreground">
-                Smart Hospital AI
-              </p>
-            </div>
-          </Link>
+       <Link to="/dashboard" className="flex items-center gap-3">
+  <img
+    src={logo}
+    alt="SmartCure"
+    className="h-20 w-20 object-contain shrink-0"
+  />
+
+  <div className="leading-tight">
+    <p className="font-display text-xl font-bold text-foreground">
+      SmartCure
+    </p>
+
+    <p className="text-xs font-medium tracking-wide text-muted-foreground">
+      Smart Reminders, Healthier Lives
+    </p>
+  </div>
+</Link>
           <button
             onClick={onClose}
             className="grid size-9 place-items-center rounded-lg text-muted-foreground hover:bg-sidebar-accent lg:hidden"

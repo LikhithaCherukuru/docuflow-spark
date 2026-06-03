@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/common/Spinner";
 import { PublicOnlyRoute } from "./-guards";
 import { useAuth } from "@/context/AuthContext";
+import logo from "@/assets/logo.png";
 
 export const Route = createFileRoute("/login")({
   validateSearch: (s: Record<string, unknown>) => ({
@@ -17,12 +18,12 @@ export const Route = createFileRoute("/login")({
   }),
   component: () => (
     <PublicOnlyRoute>
-      <LoginPage />
+      <Page />
     </PublicOnlyRoute>
   ),
 });
 
-function LoginPage() {
+function Page() {
   const navigate = useNavigate();
   const { redirect } = useSearch({ from: "/login" });
   const { login } = useAuth();
@@ -32,18 +33,22 @@ function LoginPage() {
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm<LoginValues>({
-    resolver: yupResolver(loginSchema),
+   resolver: yupResolver(loginSchema),
     defaultValues: { email: "", password: "", remember: true },
     mode: "onTouched",
   });
 
   const onSubmit = async (values: LoginValues) => {
     try {
-      await login(values.email, values.password, values.remember);
+      await login(
+  values.email,
+  values.password,
+  values.remember
+);
       toast.success("Welcome back!");
       navigate({ to: redirect || "/dashboard" });
     } catch (err: any) {
-      toast.error(err?.message || "Login failed");
+      toast.error(err?.message || " failed");
     }
   };
 
@@ -52,17 +57,28 @@ function LoginPage() {
       {/* Brand side */}
       <div className="relative hidden overflow-hidden bg-aurora lg:flex">
         <div className="relative z-10 m-auto max-w-md p-12">
-          <Link to="/" className="flex items-center gap-2">
-            <span className="grid size-10 place-items-center rounded-xl bg-gradient-primary text-primary-foreground shadow-glow">
-              <Activity className="size-5" />
-            </span>
-            <p className="font-display text-xl font-semibold">AuraMed</p>
-          </Link>
+        <Link to="/" className="flex items-center gap-4">
+  <img
+    src={logo}
+    alt="SmartCure"
+    className="h-24 w-24 object-contain"
+  />
+
+  <div>
+    <h1 className="font-display text-3xl font-bold text-foreground">
+      SmartCure
+    </h1>
+
+    <p className="text-sm text-muted-foreground">
+      Smart Reminders, Healthier Lives
+    </p>
+  </div>
+</Link>
           <h2 className="mt-12 font-display text-4xl font-bold tracking-tight">
             Care that's <span className="text-gradient-primary">faster, sharper, kinder.</span>
           </h2>
           <p className="mt-4 text-muted-foreground">
-            Sign in to your AuraMed workspace — patients, prescriptions, and insights in one place.
+            Sign in to your SmartCure workspace — patients, prescriptions, and insights in one place.
           </p>
           <div className="mt-10 grid grid-cols-3 gap-3">
             {[
@@ -142,7 +158,7 @@ function LoginPage() {
           </form>
 
           <p className="mt-6 text-center text-sm text-muted-foreground">
-            New to AuraMed?{" "}
+            New to SmartCure?{" "}
             <Link to="/signup" className="font-medium text-primary hover:underline">
               Create an account
             </Link>

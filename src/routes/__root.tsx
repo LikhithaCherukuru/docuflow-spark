@@ -11,13 +11,13 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "AuraMed — Smart AI Hospital Management" },
+      { title: "SmartCure — Smart AI Hospital Management" },
       {
         name: "description",
         content:
           "AI-powered hospital management for modern clinicians: dashboards, patient records, prescriptions, and analytics.",
       },
-      { property: "og:title", content: "AuraMed — Smart AI Hospital Management" },
+      { property: "og:title", content: "SmartCure — Smart AI Hospital Management" },
       {
         property: "og:description",
         content: "AI-powered hospital management for modern clinicians.",

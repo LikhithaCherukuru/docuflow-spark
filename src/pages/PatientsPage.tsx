@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { patientsService, type Patient } from "@/services/patients.service";
 import { useNavigate } from "@tanstack/react-router";
+import { prescriptionService } from "@/services/prescription.service";
 
 export default function PatientsPage() {
   const [mobile, setMobile] = useState("");
@@ -89,18 +90,45 @@ export default function PatientsPage() {
     }
   };
 
-  const handleViewPrescription = (patient: Patient) => {
+  const handleViewPrescription = async (
+  patient: Patient
+) => {
+  try {
+    const prescriptions =
+      await prescriptionService.getAllPrescriptions();
+
+    const prescription =
+      prescriptions.find(
+        (p: any) =>
+          p.patient_mobile ===
+          patient.mobile_number
+      );
+
+    if (!prescription) {
+      alert("No prescription found");
+      return;
+    }
+
     navigate({
-      to: "/prescriptions",
-      search: {
-        mobile: patient.mobile_number,
+      to: "/view-prescription/$id",
+      params: {
+        id: prescription.id,
       },
     });
-  };
+  } catch (error) {
+    console.error(error);
+    alert("Failed to load prescription");
+  }
+};
 
   return (
     <div className="p-6">
       <h1 className="mb-6 text-3xl font-bold">Patient Search</h1>
+
+
+
+
+
 
       <div className="mb-6 flex flex-wrap gap-3">
         <input

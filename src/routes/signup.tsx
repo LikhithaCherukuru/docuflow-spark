@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/common/Spinner";
 import { PublicOnlyRoute } from "./-guards";
 import { useAuth } from "@/context/AuthContext";
+import logo from "@/assets/logo.png";
 
 export const Route = createFileRoute("/signup")({
   component: () => (
@@ -50,7 +51,7 @@ function SignupPage() {
         confirmPassword: v.confirmPassword,
       });
 
-      toast.success("Account created — welcome to AuraMed!");
+      toast.success("Account created — welcome to SmartCure!");
       navigate({ to: "/dashboard" });
     } catch (err: any) {
       toast.error(err?.message || "Could not create account");
@@ -148,18 +149,30 @@ function SignupPage() {
       </div>
       <div className="relative hidden overflow-hidden bg-aurora lg:flex">
         <div className="relative z-10 m-auto max-w-md p-12">
-          <Link to="/" className="flex items-center gap-2">
-            <span className="grid size-10 place-items-center rounded-xl bg-gradient-primary text-primary-foreground shadow-glow">
-              <Activity className="size-5" />
-            </span>
-            <p className="font-display text-xl font-semibold">AuraMed</p>
-          </Link>
+          <Link to="/" className="flex items-center gap-4">
+  <img
+    src={logo}
+    alt="SmartCure"
+    className="h-24 w-24 object-contain"
+  />
+
+  <div>
+    <h1 className="font-display text-3xl font-bold text-foreground">
+      SmartCure
+    </h1>
+
+    <p className="text-sm text-muted-foreground">
+      Smart Reminders, Healthier Lives
+    </p>
+  </div>
+</Link>
+
           <h2 className="mt-12 font-display text-4xl font-bold tracking-tight">
             Built for the way{" "}
             <span className="text-gradient-primary">clinicians actually work.</span>
           </h2>
           <p className="mt-4 text-muted-foreground">
-            From your first patient to your thousandth, AuraMed scales with you — quietly, securely,
+            From your first patient to your thousandth, SmartCure scales with you — quietly, securely,
             beautifully.
           </p>
         </div>

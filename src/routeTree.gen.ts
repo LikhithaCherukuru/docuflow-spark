@@ -24,7 +24,6 @@ import { Route as AppAddPatientRouteImport } from './routes/_app.add-patient'
 import { Route as AppViewPrescriptionIdRouteImport } from './routes/_app.view-prescription.$id'
 import { Route as AppPrescriptionsCreateRouteImport } from './routes/_app.prescriptions.create'
 import { Route as AppEditPrescriptionIdRouteImport } from './routes/_app.edit-prescription.$id'
-import { Route as SrcRoutesAppAddPatientRouteImport } from './routes/src/routes/_app.add-patient'
 import { Route as AppPrescriptionsEditIdRouteImport } from './routes/_app.prescriptions.edit.$id'
 import { Route as AppPatientsPatientIdPrescriptionsNewRouteImport } from './routes/_app.patients.$patientId.prescriptions.new'
 
@@ -103,11 +102,6 @@ const AppEditPrescriptionIdRoute = AppEditPrescriptionIdRouteImport.update({
   path: '/edit-prescription/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
-const SrcRoutesAppAddPatientRoute = SrcRoutesAppAddPatientRouteImport.update({
-  id: '/src/routes/_app/add-patient',
-  path: '/src/routes/add-patient',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const AppPrescriptionsEditIdRoute = AppPrescriptionsEditIdRouteImport.update({
   id: '/edit/$id',
   path: '/edit/$id',
@@ -137,7 +131,6 @@ export interface FileRoutesByFullPath {
   '/prescriptions/create': typeof AppPrescriptionsCreateRoute
   '/view-prescription/$id': typeof AppViewPrescriptionIdRoute
   '/prescriptions/edit/$id': typeof AppPrescriptionsEditIdRoute
-  '/src/routes/add-patient': typeof SrcRoutesAppAddPatientRoute
   '/patients/$patientId/prescriptions/new': typeof AppPatientsPatientIdPrescriptionsNewRoute
 }
 export interface FileRoutesByTo {
@@ -157,7 +150,6 @@ export interface FileRoutesByTo {
   '/prescriptions/create': typeof AppPrescriptionsCreateRoute
   '/view-prescription/$id': typeof AppViewPrescriptionIdRoute
   '/prescriptions/edit/$id': typeof AppPrescriptionsEditIdRoute
-  '/src/routes/add-patient': typeof SrcRoutesAppAddPatientRoute
   '/patients/$patientId/prescriptions/new': typeof AppPatientsPatientIdPrescriptionsNewRoute
 }
 export interface FileRoutesById {
@@ -178,7 +170,6 @@ export interface FileRoutesById {
   '/_app/prescriptions/create': typeof AppPrescriptionsCreateRoute
   '/_app/view-prescription/$id': typeof AppViewPrescriptionIdRoute
   '/_app/prescriptions/edit/$id': typeof AppPrescriptionsEditIdRoute
-  '/src/routes/_app/add-patient': typeof SrcRoutesAppAddPatientRoute
   '/_app/patients/$patientId/prescriptions/new': typeof AppPatientsPatientIdPrescriptionsNewRoute
 }
 export interface FileRouteTypes {
@@ -200,7 +191,6 @@ export interface FileRouteTypes {
     | '/prescriptions/create'
     | '/view-prescription/$id'
     | '/prescriptions/edit/$id'
-    | '/src/routes/add-patient'
     | '/patients/$patientId/prescriptions/new'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -220,7 +210,6 @@ export interface FileRouteTypes {
     | '/prescriptions/create'
     | '/view-prescription/$id'
     | '/prescriptions/edit/$id'
-    | '/src/routes/add-patient'
     | '/patients/$patientId/prescriptions/new'
   id:
     | '__root__'
@@ -240,7 +229,6 @@ export interface FileRouteTypes {
     | '/_app/prescriptions/create'
     | '/_app/view-prescription/$id'
     | '/_app/prescriptions/edit/$id'
-    | '/src/routes/_app/add-patient'
     | '/_app/patients/$patientId/prescriptions/new'
   fileRoutesById: FileRoutesById
 }
@@ -259,7 +247,6 @@ export interface RootRouteChildren {
   AppSettingsRoute: typeof AppSettingsRoute
   AppEditPrescriptionIdRoute: typeof AppEditPrescriptionIdRoute
   AppViewPrescriptionIdRoute: typeof AppViewPrescriptionIdRoute
-  SrcRoutesAppAddPatientRoute: typeof SrcRoutesAppAddPatientRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -369,13 +356,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppEditPrescriptionIdRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/src/routes/_app/add-patient': {
-      id: '/src/routes/_app/add-patient'
-      path: '/src/routes/add-patient'
-      fullPath: '/src/routes/add-patient'
-      preLoaderRoute: typeof SrcRoutesAppAddPatientRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/_app/prescriptions/edit/$id': {
       id: '/_app/prescriptions/edit/$id'
       path: '/edit/$id'
@@ -434,7 +414,6 @@ const rootRouteChildren: RootRouteChildren = {
   AppSettingsRoute: AppSettingsRoute,
   AppEditPrescriptionIdRoute: AppEditPrescriptionIdRoute,
   AppViewPrescriptionIdRoute: AppViewPrescriptionIdRoute,
-  SrcRoutesAppAddPatientRoute: SrcRoutesAppAddPatientRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

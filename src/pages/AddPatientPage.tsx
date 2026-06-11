@@ -43,9 +43,10 @@ export function AddPatientPage() {
     resolver: yupResolver(patientSchema),
     mode: "onTouched",
     defaultValues: {
-      gender: "",
-      bloodGroup: "",
-    },
+  gender: "",
+  bloodGroup: "",
+  nextConsultationDate: "",
+},
   });
 
   const loadPatient = async () => {
@@ -55,20 +56,21 @@ export function AddPatientPage() {
       const p = Array.isArray(patient) ? patient[0] : patient;
 
       reset({
-        name: p.patient_name,
-        mobile: p.mobile_number,
-        age: String(p.age),
-        gender: p.gender,
-        bp: p.blood_pressure,
-        sugar: p.sugar_level,
-        weight: p.weight,
-        height: p.height,
-        bloodGroup: p.blood_group,
-        symptoms: p.symptoms,
-        diagnosis: p.diagnosis,
-        allergies: p.allergies,
-        address: p.address,
-      });
+  name: p.patient_name,
+  mobile: p.mobile_number,
+  age: String(p.age),
+  gender: p.gender,
+  bp: p.blood_pressure,
+  sugar: p.sugar_level,
+  weight: p.weight,
+  height: p.height,
+  bloodGroup: p.blood_group,
+  symptoms: p.symptoms,
+  diagnosis: p.diagnosis,
+  allergies: p.allergies,
+  address: p.address,
+  nextConsultationDate: p.next_consultation_date || "",
+});
     } catch (error) {
       console.error(error);
     }
@@ -84,20 +86,27 @@ export function AddPatientPage() {
     console.log("FORM DATA:", v);
 
     const payload = {
-      patient_name: v.name,
-      mobile_number: v.mobile,
-      age: Number(v.age),
-      gender: v.gender,
-      blood_pressure: v.bp,
-      sugar_level: v.sugar,
-      weight: v.weight,
-      height: v.height,
-      blood_group: v.bloodGroup,
-      symptoms: v.symptoms,
-      diagnosis: v.diagnosis,
-      allergies: v.allergies,
-      address: v.address,
-    };
+  patient_name: v.name,
+  mobile_number: v.mobile,
+  age: Number(v.age),
+  gender: v.gender,
+  blood_pressure: v.bp,
+  sugar_level: v.sugar,
+  weight: v.weight,
+  height: v.height,
+  blood_group: v.bloodGroup,
+  symptoms: v.symptoms,
+  diagnosis: v.diagnosis,
+  allergies: v.allergies,
+  address: v.address,
+
+  next_consultation_date:
+  v.nextConsultationDate
+    ? new Date(v.nextConsultationDate)
+        .toISOString()
+        .split("T")[0]
+    : null,
+};
 
     console.log("BACKEND PAYLOAD:", payload);
 
@@ -115,11 +124,11 @@ export function AddPatientPage() {
       reset();
 
       navigate({
-        to: "/patients/search",
-        search: {
-          q: payload.mobile_number,
-        },
-      });
+  to: "/create-prescription",
+  search: {
+    mobile: p.mobile_number,
+  },
+});
     } catch (err: unknown) {
       console.error("API ERROR:", err);
 
@@ -268,6 +277,25 @@ export function AddPatientPage() {
               error={errors.address?.message}
               {...register("address")}
             />
+
+            <div>
+  <label className="mb-2 block text-sm font-medium">
+    Next Consultation Date
+  </label>
+
+  <input
+    type="date"
+    {...register("nextConsultationDate")}
+    className="w-full rounded-xl border border-border bg-background px-4 py-3 outline-none transition focus:border-primary"
+  />
+
+  {errors.nextConsultationDate?.message && (
+    <p className="mt-1 text-sm text-destructive">
+      {errors.nextConsultationDate.message}
+    </p>
+  )}
+</div>
+
           </Section>
 
           <div className="flex flex-wrap justify-end gap-3 border-t border-border/60 pt-5">

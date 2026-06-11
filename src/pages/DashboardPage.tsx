@@ -1,27 +1,29 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { dashboardService, type DashboardAppointment } from "@/services/dashboard.service";
-import type { Patient } from "@/services/patients.service";
-
-import { GlassCard } from "@/components/ui/glass-card";
-import { Skeleton } from "@/components/ui/skeleton-block";
-import { ErrorState } from "@/components/common/ErrorState";
-import { Button } from "@/components/ui/button";
 
 import {
   Activity,
   CalendarDays,
-  FileText,
-  BellRing,
   UserPlus,
   Search,
   Stethoscope,
-  ChevronRight,
 } from "lucide-react";
 
 import { Link } from "@tanstack/react-router";
-import { motion } from "framer-motion";
+
+import { dashboardService, type DashboardAppointment } from "@/services/dashboard.service";
+import { api } from "@/lib/api";
 import { useAuth } from "@/context/AuthContext";
+
+import { GlassCard } from "@/components/ui/glass-card";
+import { Skeleton } from "@/components/ui/skeleton-block";
+import { Button } from "@/components/ui/button";
+
+import { ErrorState } from "@/components/common/ErrorState";
+import ConsultationCard from "@/components/dashboard/ConsultationCard";
+import ConsultationTable from "@/components/dashboard/ConsultationTable";
+
+import { toast } from "sonner";
 
 const statMeta = [
   {
@@ -41,10 +43,71 @@ const statMeta = [
 export function DashboardPage() {
   const { user } = useAuth();
 
+  const [consultationCounts, setConsultationCounts] = useState({
+  today: 0,
+  tomorrow: 0,
+  upcoming: 0,
+});
+
+const [consultations, setConsultations] = useState<any[]>([]);
+const [consultationLoading, setConsultationLoading] = useState(false);
+const [cardsLoading, setCardsLoading] = useState(false);
+const [selectedType, setSelectedType] = useState("today");
+
   const { data, isLoading, isError, error, refetch } = useQuery({
     queryKey: ["dashboard"],
     queryFn: dashboardService.get,
   });
+
+
+
+  const fetchConsultationCounts = async () => {
+  try {
+    setCardsLoading(true);
+
+    const [today, tomorrow, upcoming] = await Promise.all([
+      api.get("/consultations/today"),
+      api.get("/consultations/tomorrow"),
+      api.get("/consultations/upcoming"),
+    ]);
+
+    setConsultationCounts({
+      today: Array.isArray(today.data) ? today.data.length : 0,
+      tomorrow: Array.isArray(tomorrow.data) ? tomorrow.data.length : 0,
+      upcoming: Array.isArray(upcoming.data) ? upcoming.data.length : 0,
+    });
+  } catch (error) {
+    console.error(error);
+    toast.error("Failed to load consultation statistics");
+  } finally {
+    setCardsLoading(false);
+  }
+};
+
+const fetchConsultations = async (type: string) => {
+  try {
+    setConsultationLoading(true);
+    setSelectedType(type);
+
+    const response = await api.get(`/consultations/${type}`);
+
+    setConsultations(
+      Array.isArray(response.data) ? response.data : []
+    );
+  } catch (error) {
+    console.error(error);
+    toast.error("Failed to load consultations");
+  } finally {
+    setConsultationLoading(false);
+  }
+};
+
+useEffect(() => {
+  fetchConsultationCounts();
+  fetchConsultations("today");
+}, []);
+
+
   console.log("Dashboard Response:", data);
   console.log("Total Patients:", (data as any)?.total_patients);
   console.log("Today's Appointments:", (data as any)?.today_appointments);
@@ -129,6 +192,100 @@ export function DashboardPage() {
         })}
       </div>
 
+
+      {/* CONSULTATION MANAGEMENT */}
+<GlassCard>
+  <div className="mb-6">
+    <h2 className="font-display text-xl font-bold sm:text-2xl">
+      Consultation Management
+    </h2>
+
+    <p className="text-sm text-muted-foreground">
+      Monitor and manage patient consultations
+    </p>
+  </div>
+
+  <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+    <ConsultationCard
+      title="Today's Consultations"
+      count={consultationCounts.today}
+      badge="Today"
+      badgeColor="bg-green-100 text-green-700"
+      loading={cardsLoading}
+      onView={() => fetchConsultations("today")}
+    />
+
+    <ConsultationCard
+      title="Tomorrow's Consultations"
+      count={consultationCounts.tomorrow}
+      badge="Tomorrow"
+      badgeColor="bg-orange-100 text-orange-700"
+      loading={cardsLoading}
+      onView={() => fetchConsultations("tomorrow")}
+    />
+
+    <ConsultationCard
+      title="Upcoming Consultations"
+      count={consultationCounts.upcoming}
+      badge="Upcoming"
+      badgeColor="bg-blue-100 text-blue-700"
+      loading={cardsLoading}
+      onView={() => fetchConsultations("upcoming")}
+    />
+  </div>
+
+  <div className="mt-8">
+  <div className="mb-6 flex w-fit rounded-xl border border-border bg-muted p-1">
+    <button
+      onClick={() => fetchConsultations("today")}
+      className={`rounded-lg px-4 py-2 text-sm font-medium transition-all ${
+        selectedType === "today"
+          ? "bg-primary text-primary-foreground shadow"
+          : "text-muted-foreground hover:text-foreground"
+      }`}
+    >
+      Today
+    </button>
+
+    <button
+      onClick={() => fetchConsultations("tomorrow")}
+      className={`rounded-lg px-4 py-2 text-sm font-medium transition-all ${
+        selectedType === "tomorrow"
+          ? "bg-primary text-primary-foreground shadow"
+          : "text-muted-foreground hover:text-foreground"
+      }`}
+    >
+      Tomorrow
+    </button>
+
+    <button
+      onClick={() => fetchConsultations("upcoming")}
+      className={`rounded-lg px-4 py-2 text-sm font-medium transition-all ${
+        selectedType === "upcoming"
+          ? "bg-primary text-primary-foreground shadow"
+          : "text-muted-foreground hover:text-foreground"
+      }`}
+    >
+      Upcoming
+    </button>
+  </div>
+     <h3> {selectedType === "today"
+        ? "Today's Consultations"
+        : selectedType === "tomorrow"
+        ? "Tomorrow's Consultations"
+        : "Upcoming Consultations"}
+    </h3>
+
+    <ConsultationTable
+      consultations={consultations}
+      loading={consultationLoading}
+    />
+  </div>
+</GlassCard>
+
+
+
+
       {/* APPOINTMENTS */}
       <GlassCard>
         <div className="mb-4">
@@ -193,3 +350,4 @@ function greeting() {
 
   return "evening";
 }
+

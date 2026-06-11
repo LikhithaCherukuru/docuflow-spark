@@ -121,6 +121,19 @@ export default function PatientsPage() {
   }
 };
 
+const handleAddPrescription = (
+  patient: Patient
+) => {
+  navigate({
+    to: "/create-prescription",
+    search: {
+      mobile: patient.mobile_number,
+    },
+  });
+};
+
+
+
   return (
     <div className="p-6">
       <h1 className="mb-6 text-3xl font-bold">Patient Search</h1>
@@ -214,13 +227,22 @@ export default function PatientsPage() {
                     </div>
                   </td>
                   <td className="border p-2">
-                    <button
-                      onClick={() => handleViewPrescription(patient)}
-                      className="rounded bg-green-600 px-3 py-1 text-white"
-                    >
-                      View Prescription
-                    </button>
-                  </td>
+  <div className="flex gap-2">
+    <button
+      onClick={() => handleViewPrescription(patient)}
+      className="rounded bg-green-600 px-3 py-1 text-white"
+    >
+      View
+    </button>
+
+    <button
+      onClick={() => handleAddPrescription(patient)}
+      className="rounded bg-blue-600 px-3 py-1 text-white"
+    >
+      Add
+    </button>
+  </div>
+</td>
                 </tr>
               ))}
             </tbody>

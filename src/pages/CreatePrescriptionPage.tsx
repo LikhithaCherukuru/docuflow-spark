@@ -1,6 +1,8 @@
+import { useEffect } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { useNavigate } from "@tanstack/react-router";
 import { prescriptionService } from "@/services/prescription.service";
+import { Route } from "@/routes/_app.create-prescription";
 
 interface Medicine {
   medicine_name: string;
@@ -24,10 +26,13 @@ interface PrescriptionForm {
 export default function CreatePrescriptionPage() {
   const navigate = useNavigate();
 
+  const search = Route.useSearch();
+
   const {
     register,
     control,
     handleSubmit,
+    setValue,
     formState: { errors },
   } = useForm<PrescriptionForm>({
     defaultValues: {
@@ -55,6 +60,12 @@ export default function CreatePrescriptionPage() {
     name: "medicines",
   });
 
+  useEffect(() => {
+    if (search.mobile) {
+      setValue("patient_mobile", search.mobile);
+    }
+  }, [search.mobile, setValue]);
+
   const onSubmit = async (data: PrescriptionForm) => {
     try {
       await prescriptionService.createPrescription(data);
@@ -73,13 +84,22 @@ export default function CreatePrescriptionPage() {
 
   return (
     <div className="p-6">
-      <h1 className="mb-2 text-3xl font-bold">Create Prescription</h1>
+      <h1 className="mb-2 text-3xl font-bold">
+        Create Prescription
+      </h1>
 
-      <p className="mb-6 text-gray-500">Create and manage patient medicine prescriptions</p>
+      <p className="mb-6 text-gray-500">
+        Create and manage patient medicine prescriptions
+      </p>
 
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="space-y-6"
+      >
         <div>
-          <label className="mb-1 block font-medium">Patient Mobile Number</label>
+          <label className="mb-1 block font-medium">
+            Patient Mobile Number
+          </label>
 
           <input
             {...register("patient_mobile", {
@@ -88,11 +108,17 @@ export default function CreatePrescriptionPage() {
             className="w-full rounded border p-2"
           />
 
-          {errors.patient_mobile && <p className="text-red-500">{errors.patient_mobile.message}</p>}
+          {errors.patient_mobile && (
+            <p className="text-red-500">
+              {errors.patient_mobile.message}
+            </p>
+          )}
         </div>
 
         <div>
-          <label className="mb-1 block font-medium">Doctor Name</label>
+          <label className="mb-1 block font-medium">
+            Doctor Name
+          </label>
 
           <input
             {...register("doctor_name", {
@@ -101,58 +127,103 @@ export default function CreatePrescriptionPage() {
             className="w-full rounded border p-2"
           />
 
-          {errors.doctor_name && <p className="text-red-500">{errors.doctor_name.message}</p>}
+          {errors.doctor_name && (
+            <p className="text-red-500">
+              {errors.doctor_name.message}
+            </p>
+          )}
         </div>
 
         <div>
-          <label className="mb-1 block font-medium">Notes</label>
+          <label className="mb-1 block font-medium">
+            Notes
+          </label>
 
-          <textarea {...register("notes")} className="w-full rounded border p-2" rows={3} />
+          <textarea
+            {...register("notes")}
+            className="w-full rounded border p-2"
+            rows={3}
+          />
         </div>
 
         {fields.map((field, index) => (
-          <div key={field.id} className="rounded border p-4">
-            <h2 className="mb-4 text-xl font-semibold">Medicine #{index + 1}</h2>
+          <div
+            key={field.id}
+            className="rounded border p-4"
+          >
+            <h2 className="mb-4 text-xl font-semibold">
+              Medicine #{index + 1}
+            </h2>
 
             <div className="mb-4">
-              <label className="block font-medium">Medicine Name</label>
+              <label className="block font-medium">
+                Medicine Name
+              </label>
 
               <input
-                {...register(`medicines.${index}.medicine_name`, {
-                  required: "Medicine Name is required",
-                })}
+                {...register(
+                  `medicines.${index}.medicine_name`,
+                  {
+                    required:
+                      "Medicine Name is required",
+                  }
+                )}
                 className="w-full rounded border p-2"
               />
             </div>
 
             <div className="mb-4">
-              <p className="mb-2 font-medium">Timing</p>
+              <p className="mb-2 font-medium">
+                Timing
+              </p>
 
               <div className="flex flex-wrap gap-4">
                 <label>
-                  <input type="checkbox" {...register(`medicines.${index}.early_morning`)} />
+                  <input
+                    type="checkbox"
+                    {...register(
+                      `medicines.${index}.early_morning`
+                    )}
+                  />
                   Early Morning
                 </label>
 
                 <label>
-                  <input type="checkbox" {...register(`medicines.${index}.morning`)} />
+                  <input
+                    type="checkbox"
+                    {...register(
+                      `medicines.${index}.morning`
+                    )}
+                  />
                   Morning
                 </label>
 
                 <label>
-                  <input type="checkbox" {...register(`medicines.${index}.afternoon`)} />
+                  <input
+                    type="checkbox"
+                    {...register(
+                      `medicines.${index}.afternoon`
+                    )}
+                  />
                   Afternoon
                 </label>
 
                 <label>
-                  <input type="checkbox" {...register(`medicines.${index}.night`)} />
+                  <input
+                    type="checkbox"
+                    {...register(
+                      `medicines.${index}.night`
+                    )}
+                  />
                   Night
                 </label>
               </div>
             </div>
 
             <div className="mb-4">
-              <p className="mb-2 font-medium">Food Timing</p>
+              <p className="mb-2 font-medium">
+                Food Timing
+              </p>
 
               <div className="flex gap-4">
                 <label>
@@ -160,9 +231,15 @@ export default function CreatePrescriptionPage() {
                     type="radio"
                     value="before"
                     onChange={() => {
-                      const before = document.getElementById(`before-${index}`) as HTMLInputElement;
+                      const before =
+                        document.getElementById(
+                          `before-${index}`
+                        ) as HTMLInputElement;
 
-                      const after = document.getElementById(`after-${index}`) as HTMLInputElement;
+                      const after =
+                        document.getElementById(
+                          `after-${index}`
+                        ) as HTMLInputElement;
 
                       before.checked = true;
                       after.checked = false;
@@ -177,9 +254,15 @@ export default function CreatePrescriptionPage() {
                     value="after"
                     defaultChecked
                     onChange={() => {
-                      const before = document.getElementById(`before-${index}`) as HTMLInputElement;
+                      const before =
+                        document.getElementById(
+                          `before-${index}`
+                        ) as HTMLInputElement;
 
-                      const after = document.getElementById(`after-${index}`) as HTMLInputElement;
+                      const after =
+                        document.getElementById(
+                          `after-${index}`
+                        ) as HTMLInputElement;
 
                       before.checked = false;
                       after.checked = true;
@@ -191,36 +274,49 @@ export default function CreatePrescriptionPage() {
                 <input
                   id={`before-${index}`}
                   type="hidden"
-                  {...register(`medicines.${index}.before_food`)}
+                  {...register(
+                    `medicines.${index}.before_food`
+                  )}
                 />
 
                 <input
                   id={`after-${index}`}
                   type="hidden"
-                  {...register(`medicines.${index}.after_food`)}
+                  {...register(
+                    `medicines.${index}.after_food`
+                  )}
                 />
               </div>
             </div>
 
             <div className="mb-4">
-              <label className="block font-medium">Duration Days</label>
+              <label className="block font-medium">
+                Duration Days
+              </label>
 
               <input
                 type="number"
                 min={1}
-                {...register(`medicines.${index}.duration_days`, {
-                  required: true,
-                  valueAsNumber: true,
-                })}
+                {...register(
+                  `medicines.${index}.duration_days`,
+                  {
+                    required: true,
+                    valueAsNumber: true,
+                  }
+                )}
                 className="w-full rounded border p-2"
               />
             </div>
 
             <div className="mb-4">
-              <label className="block font-medium">Remarks</label>
+              <label className="block font-medium">
+                Remarks
+              </label>
 
               <textarea
-                {...register(`medicines.${index}.remarks`)}
+                {...register(
+                  `medicines.${index}.remarks`
+                )}
                 className="w-full rounded border p-2"
                 rows={2}
               />
@@ -259,7 +355,10 @@ export default function CreatePrescriptionPage() {
         </button>
 
         <div>
-          <button type="submit" className="rounded bg-blue-600 px-6 py-2 text-white">
+          <button
+            type="submit"
+            className="rounded bg-blue-600 px-6 py-2 text-white"
+          >
             Save Prescription
           </button>
         </div>

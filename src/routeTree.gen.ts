@@ -22,9 +22,7 @@ import { Route as AppDashboardRouteImport } from './routes/_app.dashboard'
 import { Route as AppCreatePrescriptionRouteImport } from './routes/_app.create-prescription'
 import { Route as AppAddPatientRouteImport } from './routes/_app.add-patient'
 import { Route as AppViewPrescriptionIdRouteImport } from './routes/_app.view-prescription.$id'
-import { Route as AppPrescriptionsCreateRouteImport } from './routes/_app.prescriptions.create'
 import { Route as AppEditPrescriptionIdRouteImport } from './routes/_app.edit-prescription.$id'
-import { Route as AppPrescriptionsEditIdRouteImport } from './routes/_app.prescriptions.edit.$id'
 import { Route as AppPatientsPatientIdPrescriptionsNewRouteImport } from './routes/_app.patients.$patientId.prescriptions.new'
 
 const UnauthorizedRoute = UnauthorizedRouteImport.update({
@@ -92,20 +90,10 @@ const AppViewPrescriptionIdRoute = AppViewPrescriptionIdRouteImport.update({
   path: '/view-prescription/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AppPrescriptionsCreateRoute = AppPrescriptionsCreateRouteImport.update({
-  id: '/create',
-  path: '/create',
-  getParentRoute: () => AppPrescriptionsRoute,
-} as any)
 const AppEditPrescriptionIdRoute = AppEditPrescriptionIdRouteImport.update({
   id: '/_app/edit-prescription/$id',
   path: '/edit-prescription/$id',
   getParentRoute: () => rootRouteImport,
-} as any)
-const AppPrescriptionsEditIdRoute = AppPrescriptionsEditIdRouteImport.update({
-  id: '/edit/$id',
-  path: '/edit/$id',
-  getParentRoute: () => AppPrescriptionsRoute,
 } as any)
 const AppPatientsPatientIdPrescriptionsNewRoute =
   AppPatientsPatientIdPrescriptionsNewRouteImport.update({
@@ -124,13 +112,11 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof AppDashboardRoute
   '/notifications': typeof AppNotificationsRoute
   '/patients': typeof AppPatientsRouteWithChildren
-  '/prescriptions': typeof AppPrescriptionsRouteWithChildren
+  '/prescriptions': typeof AppPrescriptionsRoute
   '/profile': typeof AppProfileRoute
   '/settings': typeof AppSettingsRoute
   '/edit-prescription/$id': typeof AppEditPrescriptionIdRoute
-  '/prescriptions/create': typeof AppPrescriptionsCreateRoute
   '/view-prescription/$id': typeof AppViewPrescriptionIdRoute
-  '/prescriptions/edit/$id': typeof AppPrescriptionsEditIdRoute
   '/patients/$patientId/prescriptions/new': typeof AppPatientsPatientIdPrescriptionsNewRoute
 }
 export interface FileRoutesByTo {
@@ -143,13 +129,11 @@ export interface FileRoutesByTo {
   '/dashboard': typeof AppDashboardRoute
   '/notifications': typeof AppNotificationsRoute
   '/patients': typeof AppPatientsRouteWithChildren
-  '/prescriptions': typeof AppPrescriptionsRouteWithChildren
+  '/prescriptions': typeof AppPrescriptionsRoute
   '/profile': typeof AppProfileRoute
   '/settings': typeof AppSettingsRoute
   '/edit-prescription/$id': typeof AppEditPrescriptionIdRoute
-  '/prescriptions/create': typeof AppPrescriptionsCreateRoute
   '/view-prescription/$id': typeof AppViewPrescriptionIdRoute
-  '/prescriptions/edit/$id': typeof AppPrescriptionsEditIdRoute
   '/patients/$patientId/prescriptions/new': typeof AppPatientsPatientIdPrescriptionsNewRoute
 }
 export interface FileRoutesById {
@@ -163,13 +147,11 @@ export interface FileRoutesById {
   '/_app/dashboard': typeof AppDashboardRoute
   '/_app/notifications': typeof AppNotificationsRoute
   '/_app/patients': typeof AppPatientsRouteWithChildren
-  '/_app/prescriptions': typeof AppPrescriptionsRouteWithChildren
+  '/_app/prescriptions': typeof AppPrescriptionsRoute
   '/_app/profile': typeof AppProfileRoute
   '/_app/settings': typeof AppSettingsRoute
   '/_app/edit-prescription/$id': typeof AppEditPrescriptionIdRoute
-  '/_app/prescriptions/create': typeof AppPrescriptionsCreateRoute
   '/_app/view-prescription/$id': typeof AppViewPrescriptionIdRoute
-  '/_app/prescriptions/edit/$id': typeof AppPrescriptionsEditIdRoute
   '/_app/patients/$patientId/prescriptions/new': typeof AppPatientsPatientIdPrescriptionsNewRoute
 }
 export interface FileRouteTypes {
@@ -188,9 +170,7 @@ export interface FileRouteTypes {
     | '/profile'
     | '/settings'
     | '/edit-prescription/$id'
-    | '/prescriptions/create'
     | '/view-prescription/$id'
-    | '/prescriptions/edit/$id'
     | '/patients/$patientId/prescriptions/new'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -207,9 +187,7 @@ export interface FileRouteTypes {
     | '/profile'
     | '/settings'
     | '/edit-prescription/$id'
-    | '/prescriptions/create'
     | '/view-prescription/$id'
-    | '/prescriptions/edit/$id'
     | '/patients/$patientId/prescriptions/new'
   id:
     | '__root__'
@@ -226,9 +204,7 @@ export interface FileRouteTypes {
     | '/_app/profile'
     | '/_app/settings'
     | '/_app/edit-prescription/$id'
-    | '/_app/prescriptions/create'
     | '/_app/view-prescription/$id'
-    | '/_app/prescriptions/edit/$id'
     | '/_app/patients/$patientId/prescriptions/new'
   fileRoutesById: FileRoutesById
 }
@@ -242,7 +218,7 @@ export interface RootRouteChildren {
   AppDashboardRoute: typeof AppDashboardRoute
   AppNotificationsRoute: typeof AppNotificationsRoute
   AppPatientsRoute: typeof AppPatientsRouteWithChildren
-  AppPrescriptionsRoute: typeof AppPrescriptionsRouteWithChildren
+  AppPrescriptionsRoute: typeof AppPrescriptionsRoute
   AppProfileRoute: typeof AppProfileRoute
   AppSettingsRoute: typeof AppSettingsRoute
   AppEditPrescriptionIdRoute: typeof AppEditPrescriptionIdRoute
@@ -342,26 +318,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppViewPrescriptionIdRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_app/prescriptions/create': {
-      id: '/_app/prescriptions/create'
-      path: '/create'
-      fullPath: '/prescriptions/create'
-      preLoaderRoute: typeof AppPrescriptionsCreateRouteImport
-      parentRoute: typeof AppPrescriptionsRoute
-    }
     '/_app/edit-prescription/$id': {
       id: '/_app/edit-prescription/$id'
       path: '/edit-prescription/$id'
       fullPath: '/edit-prescription/$id'
       preLoaderRoute: typeof AppEditPrescriptionIdRouteImport
       parentRoute: typeof rootRouteImport
-    }
-    '/_app/prescriptions/edit/$id': {
-      id: '/_app/prescriptions/edit/$id'
-      path: '/edit/$id'
-      fullPath: '/prescriptions/edit/$id'
-      preLoaderRoute: typeof AppPrescriptionsEditIdRouteImport
-      parentRoute: typeof AppPrescriptionsRoute
     }
     '/_app/patients/$patientId/prescriptions/new': {
       id: '/_app/patients/$patientId/prescriptions/new'
@@ -386,19 +348,6 @@ const AppPatientsRouteWithChildren = AppPatientsRoute._addFileChildren(
   AppPatientsRouteChildren,
 )
 
-interface AppPrescriptionsRouteChildren {
-  AppPrescriptionsCreateRoute: typeof AppPrescriptionsCreateRoute
-  AppPrescriptionsEditIdRoute: typeof AppPrescriptionsEditIdRoute
-}
-
-const AppPrescriptionsRouteChildren: AppPrescriptionsRouteChildren = {
-  AppPrescriptionsCreateRoute: AppPrescriptionsCreateRoute,
-  AppPrescriptionsEditIdRoute: AppPrescriptionsEditIdRoute,
-}
-
-const AppPrescriptionsRouteWithChildren =
-  AppPrescriptionsRoute._addFileChildren(AppPrescriptionsRouteChildren)
-
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   LoginRoute: LoginRoute,
@@ -409,7 +358,7 @@ const rootRouteChildren: RootRouteChildren = {
   AppDashboardRoute: AppDashboardRoute,
   AppNotificationsRoute: AppNotificationsRoute,
   AppPatientsRoute: AppPatientsRouteWithChildren,
-  AppPrescriptionsRoute: AppPrescriptionsRouteWithChildren,
+  AppPrescriptionsRoute: AppPrescriptionsRoute,
   AppProfileRoute: AppProfileRoute,
   AppSettingsRoute: AppSettingsRoute,
   AppEditPrescriptionIdRoute: AppEditPrescriptionIdRoute,
